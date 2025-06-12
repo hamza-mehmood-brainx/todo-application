@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     e.preventDefault();
 
     // Validate
-    const id = parseInt(idInput.value, 10);
+    const id = parseInt(idInput.value);
     if (!id || id <= 0) {
       idInput.classList.add('is-invalid');
       return;

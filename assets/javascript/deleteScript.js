@@ -8,11 +8,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const confirmBtn = document.getElementById('confirmDeleteBtn');
 
   let todoIdToDelete = null;
-
+// Form EventListner
   form.addEventListener('submit', (e) => {
     e.preventDefault();
 
-    const id = parseInt(idInput.value, 10);
+    const id = parseInt(idInput.value);
     if (!id || id <= 0) {
       idInput.classList.add('is-invalid');
       return;
@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     confirmModal.show(); // Show confirmation modal
   });
 
+  // Confimr Delete
   confirmBtn.addEventListener('click', async () => {
     if (!todoIdToDelete) return;
 

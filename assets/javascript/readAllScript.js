@@ -42,15 +42,18 @@ document.addEventListener('DOMContentLoaded', () => {
     loadingEl.textContent = 'Loading todos from API...';
     const baseURL = 'https://jsonplaceholder.typicode.com';
     try {
+    //  Checking if already todo exist
       const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
       todos = stored ? JSON.parse(stored) : [];
       if (todos.length > 0) {
         renderTodos(todos);
         return;
       }
+       // Fetching from api
       const res = await fetch(`${baseURL}/user/1/todos`);
       const data = await res.json();
       console.log(data);
+      // Saving todos to localStorage
       localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(data));
        const newTodos = localStorage.getItem(LOCAL_STORAGE_KEY);
        renderTodos(JSON.parse(newTodos));

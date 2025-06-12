@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    // Simple validation
+    // Validation
     if (!titleInput.checkValidity()) {
       titleInput.classList.add('is-invalid');
       return;
@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       form.querySelector('button[type="submit"]').disabled = true;
 
-      // Simulate API call
+      // API call
       const response = await fetch(API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const data = await response.json();
 
-      // Assign a unique ID (mock, since API doesn't persist)
+      // Assign a unique ID 
       data.id = Date.now();
 
       // Save to localStorage
