@@ -13,10 +13,11 @@ export function showToast(message, type = "info") {
 }
 
 export function validateTodo(todo) {
+  console.log("Validating todo:", todo);
   return (
     todo &&
     typeof todo === "object" &&
-    typeof todo.id === "number" &&
+    typeof todo.id === "string" &&
     typeof todo.title === "string" &&
     todo.title.length >= 3 &&
     typeof todo.completed === "boolean"

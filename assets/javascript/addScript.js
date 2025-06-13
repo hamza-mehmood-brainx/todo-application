@@ -66,4 +66,15 @@ document.addEventListener("DOMContentLoaded", () => {
       showLoadingState(false);
     }
   });
+
+  // Input validation for title
+  titleInput.addEventListener("input", () => {
+    if (titleInput.value.trim() === "") {
+      titleInput.classList.add("is-invalid");
+      titleInput.classList.remove("is-valid");
+    } else {
+      titleInput.classList.remove("is-invalid");
+      titleInput.classList.add("is-valid");
+    }
+  });
 });
