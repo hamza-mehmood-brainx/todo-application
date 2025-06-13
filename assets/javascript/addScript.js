@@ -1,21 +1,23 @@
-const API_URL = 'https://jsonplaceholder.typicode.com/todos';
-const LOCAL_STORAGE_KEY = 'todos';
+import { showToast, validateTodo } from "./utilities.js";
+
+const API_URL = "https://jsonplaceholder.typicode.com/todos";
+const LOCAL_STORAGE_KEY = "todos";
 const USER_ID = 1;
 
-document.addEventListener('DOMContentLoaded', () => {
-  const form = document.getElementById('addTodoForm');
-  const titleInput = document.getElementById('title');
-  const completedInput = document.getElementById('completed');
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("addTodoForm");
+  const titleInput = document.getElementById("title");
+  const completedInput = document.getElementById("completed");
 
-  form.addEventListener('submit', async (e) => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     // Validation
     if (!titleInput.checkValidity()) {
-      titleInput.classList.add('is-invalid');
+      titleInput.classList.add("is-invalid");
       return;
     }
-    titleInput.classList.remove('is-invalid');
+    titleInput.classList.remove("is-invalid");
 
     const newTodo = {
       title: titleInput.value.trim(),
@@ -23,21 +25,33 @@ document.addEventListener('DOMContentLoaded', () => {
       userId: USER_ID,
     };
 
-    try {
-      form.querySelector('button[type="submit"]').disabled = true;
+    // Function to show loading state
+    function showLoadingState(isLoading) {
+      const submitBtn = form.querySelector('button[type="submit"]');
+      submitBtn.disabled = isLoading;
+      submitBtn.innerHTML = isLoading
+        ? '<span class="spinner-border spinner-border-sm"></span> Loading...'
+        : "Submit";
+    }
 
+    try {
+      showLoadingState(true);
       // API call
       const response = await fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newTodo),
       });
-
       const data = await response.json();
 
-      // Assign a unique ID 
-      data.id = Date.now();
+      // Assign a unique ID
+      data.id = `${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 
+      // Validating Todo before saving
+      if (!validateTodo(data)) {
+        showToast("Invalid todo data. Please check your input.", "danger");
+        return;
+      }
       // Save to localStorage
       const todos = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)) || [];
       todos.push(data);
@@ -45,26 +59,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Reset form
       form.reset();
-      showToast('Todo added successfully!', 'success');
-
+      showToast("Todo added successfully!", "success");
     } catch (error) {
-      showToast('Failed to add todo. Please try again.', 'danger');
+      showToast("Failed to add todo. Please try again.", "danger");
     } finally {
-      form.querySelector('button[type="submit"]').disabled = false;
+      showLoadingState(false);
+    }
+  });
+
+  // Input validation for title
+  titleInput.addEventListener("input", () => {
+    if (titleInput.value.trim() === "") {
+      titleInput.classList.add("is-invalid");
+      titleInput.classList.remove("is-valid");
+    } else {
+      titleInput.classList.remove("is-invalid");
+      titleInput.classList.add("is-valid");
     }
   });
 });
-
-// Toast function
-function showToast(message, type = 'info') {
-  const container = document.getElementById('toastContainer');
-  const toast = document.createElement('div');
-  toast.className = `alert alert-${type} alert-dismissible fade show`;
-  toast.role = 'alert';
-  toast.innerHTML = `
-    ${message}
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-  `;
-  container.innerHTML = '';
-  container.appendChild(toast);
-}
